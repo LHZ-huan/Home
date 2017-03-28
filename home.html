@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<title>Home</title>
+		<link rel="stylesheet" type="text/css" href="style/index.css">
+	</head>
+	<body>
+		<div id="loading">
+			<div id="numload" class="laoding-num">0%</div>
+			<div id="loading-center">
+				<div id="loading-center-absolute">
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<!--<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>
+					<div class="object"></div>-->
+				</div>
+			</div>
+		</div>
+		<script src="js/three.js"></script>
+		<script src="js/tween.js"></script>
+		<script src="js/TrackballControls.js"></script>
+		<script src="js/CSS3DRenderer.js"></script>
+		<div id="container" style="display: none;"></div>
+		<div id="info" style="display: none;">
+			<a href="http://threejs.org" target="_blank"></a></div>
+		<div id="menu" style="display: none;">
+			<button id="table">TABLE</button>
+			<button id="sphere">SPHERE</button>
+			<button id="helix">HELIX</button>
+			<button id="grid">GRID</button>
+		</div>
+		<script>
+			var imgArr = ['img/1.jpg','img/2.jpg','img/1.jpg','img/2.jpg','img/1.jpg','img/2.jpg','img/1.jpg','img/2.jpg'];
+			function preloadimages(arr){
+			    var newimages=[]
+			    var imgdex = 0;
+			    var dexnum = 100/arr.length;
+			    var timeout =null;
+			    var arr=(typeof arr!="object")? [arr] : arr  //确保参数总是数组
+			    for (var i=0; i<arr.length; i++){
+			        clearInterval(timeout);
+			        newimages[i]=new Image();
+			        newimages[i].src=arr[i];
+			        imgdex++;
+//			        document.getElementById("numload").innerHTML = parseInt(dexnum*imgdex)+"%"; 
+			        timeout = setInterval(function() {
+			        		var html = document.getElementById("numload").innerHTML.split("%")[0];
+			        		if((parseInt(html)+1)>dexnum*imgdex){
+			        			return false;
+			        		}
+			        		document.getElementById("numload").innerHTML = (parseInt(html)+1)+"%";
+			        },30)
+			        
+			        if (imgdex>=arr.length) {
+			        		document.getElementById("loading").style.display="none";
+			        		document.getElementById("container").style.display="block";
+			        		document.getElementById("info").style.display="block";
+			        		document.getElementById("menu").style.display="block";
+			        		break;
+			        }
+			    }
+			}
+			preloadimages(imgArr);
+			var table = [
+				"A1.jpeg", "Hydrogen", "1.00794", 1, 1,
+				"A1.jpeg", "Helium", "4.002602", 2, 1,
+				"A1.jpeg", "Lithium", "6.941", 3,1,
+				"A1.jpeg", "Beryllium", "9.012182", 4, 1,
+				"A1.jpeg", "Nitrogen", "14.0067", 5, 1,
+				"A1.jpeg", "Oxygen", "15.9994", 6, 1,
+				"A1.jpeg", "Fluorine", "18.9984032", 7, 1,
+				"A1.jpeg", "Neon", "20.1797", 8, 1,
+				"A1.jpeg", "Sodium", "22.98976...", 9, 1,
+				"A1.jpeg", "Boron", "10.811", 10, 1,
+				"A1.jpeg", "Magnesium", "24.305", 11, 1,
+				"A1.jpeg", "Carbon", "12.0107", 12, 1,
+				"A1.jpeg", "Aluminium", "26.9815386", 13, 1,
+				"A1.jpeg", "Silicon", "28.0855", 14, 1,
+				"A1.jpeg", "Phosphorus", "30.973762", 15, 1,
+				"A1.jpeg", "Sulfur", "32.065", 16, 1,
+				"A2.jpeg", "Chlorine", "35.453", 1, 2,
+				"A2.jpeg", "Argon", "39.948", 2, 2,
+				"A2.jpeg", "Potassium", "39.948",3, 2,
+				"A2.jpeg", "Calcium", "40.078", 4, 2,
+				"A2.jpeg", "Scandium", "44.955912", 5, 2,
+				"A2.jpeg", "Titanium", "47.867", 6, 2,
+				"A2.jpeg", "Vanadium", "50.9415", 7,2,
+				"A2.jpeg", "Chromium", "51.9961", 8, 2,
+				"A2.jpeg", "Manganese", "54.938045", 9, 2,
+				"A2.jpeg", "Iron", "55.845", 10, 2,
+				"A2.jpeg", "Cobalt", "58.933195", 11, 2,
+				"A2.jpeg", "Nickel", "58.6934", 12, 2,
+				"A2.jpeg", "Nickel", "58.6934", 13, 2,
+				"A2.jpeg", "Copper", "63.546",14, 2,
+				"A2.jpeg", "Zinc", "65.38", 15, 2,
+				"A2.jpeg", "Gallium", "69.723", 16, 2,
+				"A3.jpeg", "Germanium", "72.63", 1, 3,
+				"A3.jpeg", "Arsenic", "74.9216", 2, 3,
+				"A3.jpeg", "Selenium", "78.96", 3, 3,
+				"A3.jpeg", "Bromine", "79.904", 4, 3,
+				"A3.jpeg", "Krypton", "83.798", 5, 3,
+				"A3.jpeg", "Rubidium", "85.4678",6,3,
+				"A3.jpeg", "Strontium", "87.62", 7, 3,
+				"A3.jpeg", "Yttrium", "88.90585", 8, 3,
+				"A3.jpeg", "Zirconium", "91.224", 9, 3,
+				"A3.jpeg", "Niobium", "92.90628", 10, 3,
+				"A3.jpeg", "Molybdenum", "95.96", 11, 3,
+				"A3.jpeg", "Technetium", "(98)", 12, 3,
+				"A3.jpeg", "Ruthenium", "101.07", 13, 3,
+				"A3.jpeg", "Rhodium", "102.9055", 14, 3,
+				"A3.jpeg", "Palladium", "106.42", 15, 3,
+				"A3.jpeg", "Silver", "107.8682", 16, 3,
+				"A4.jpeg", "Cadmium", "112.411", 1, 4,
+				"A4.jpeg", "Indium", "114.818", 2,4,
+				"A4.jpeg", "Tin", "118.71", 3, 4,
+				"A4.jpeg", "Antimony", "121.76", 4, 4,
+				"A4.jpeg", "Tellurium", "127.6", 5,4,
+				"A4.jpeg", "Iodine", "126.90447", 6, 4,
+				"A4.jpeg", "Xenon", "131.293", 7, 4,
+				"A4.jpeg", "Barium", "132.9054", 8, 4,
+				"A4.jpeg", "Lanthanum", "138.90547", 9, 4,
+				"A4.jpeg", "Cerium", "140.116", 10, 4,
+				"A4.jpeg", "Praseodymium", "140.90765", 11, 4,
+				"A4.jpeg", "Neodymium", "144.242", 12, 4,
+				"A4.jpeg", "Promethium", "(145)", 13,4,
+				"A4.jpeg", "Samarium", "150.36", 14, 4,
+				"A4.jpeg", "Europium", "151.964", 15, 4,
+				"A4.jpeg", "Gadolinium", "157.25", 16, 4,
+				"A5.jpeg", "Terbium", "158.92535", 1, 5,
+				"A5.jpeg", "Dysprosium", "162.5", 2, 5,
+				"A5.jpeg", "Holmium", "164.93032", 3, 5,
+				"A5.jpeg", "Dysprosium", "162.5", 4, 5,
+				"A5.jpeg", "Holmium", "164.93032", 5, 5,
+				"A5.jpeg", "Erbium", "167.259", 6, 5,
+				"A5.jpeg", "Thulium", "168.93421", 7, 5,
+				"A5.jpeg", "Ytterbium", "173.054", 8, 5,
+				"A5.jpeg", "Lutetium", "174.9668", 9, 5,
+				"A5.jpeg", "Hafnium", "178.49", 10, 5,
+				"A5.jpeg", "Tantalum", "180.94788", 11, 5,
+				"A5.jpeg", "Tungsten", "183.84",12, 5,
+				"A5.jpeg", "Rhenium", "186.207", 13, 5,
+				"A5.jpeg", "Osmium", "190.23", 14, 5,
+				"A5.jpeg", "Iridium", "192.217", 15, 5,
+				"A5.jpeg", "Platinum", "195.084", 16, 5,
+				"A6.jpeg", "Gold", "196.966569", 1, 6,
+				"A6.jpeg", "Mercury", "200.59", 2, 6,
+				"A6.jpeg", "Thallium", "204.3833", 3, 6,
+				"A6.jpeg", "Lead", "207.2", 4, 6,
+				"A6.jpeg", "Bismuth", "208.9804", 5, 6,
+				"A6.jpeg", "Polonium", "(209)", 6, 6,
+				"A6.jpeg", "Astatine", "(210)", 7, 6,
+				"A6.jpeg", "Radon", "(222)", 8, 6,
+				"A6.jpeg", "Francium", "(223)", 9,6,
+				"A6.jpeg", "Radium", "(226)", 10, 6,
+				"A6.jpeg", "Actinium", "(227)", 11, 6,
+				"A6.jpeg", "Thorium", "232.03806", 12, 6,
+				"A6.jpeg", "Protactinium", "231.0588", 13, 6,
+				"A6.jpeg", "Uranium", "238.02891", 14, 6,
+				"A6.jpeg", "Neptunium", "(237)", 15, 6,
+				"A6.jpeg", "Plutonium", "(244)", 16, 6,
+				"A7.jpeg", "Americium", "(243)", 1,7,
+				"A7.jpeg", "Curium", "(247)", 2, 7,
+				"A7.jpeg", "Berkelium", "(247)", 3, 7,
+				"A7.jpeg", "Californium", "(251)", 4, 7,
+				"A7.jpeg", "Einstenium", "(252)", 5, 7,
+				"A7.jpeg", "Fermium", "(257)", 6, 7,
+				"A7.jpeg", "Mendelevium", "(258)", 7,7,
+				"A7.jpeg", "Nobelium", "(259)", 8,7,
+				"A7.jpeg", "Lawrencium", "(262)", 9, 7,
+				"A7.jpeg", "Rutherfordium", "(267)", 10, 7,
+				"A7.jpeg", "Dubnium", "(268)", 11, 7,
+				"A7.jpeg", "Seaborgium", "(271)", 12, 7,
+				"A7.jpeg", "Bohrium", "(272)", 13, 7,
+				"A7.jpeg", "Hassium", "(270)", 14, 7,
+				"A7.jpeg", "Meitnerium", "(276)", 15, 7,
+				"A7.jpeg", "Darmstadium", "(281)", 16, 7,
+				"A8.jpeg", "Roentgenium", "(280)", 1, 8,
+				"A8.jpeg", "Copernicium", "(285)", 2, 8,
+				"A8.jpeg", "Unutrium", "(284)", 3, 8,
+				"A8.jpeg", "Flerovium", "(289)", 4, 8,
+				"A8.jpeg", "Ununpentium", "(288)", 5, 8,
+				"A8.jpeg", "Livermorium", "(293)", 6, 8,
+				"A8.jpeg", "Ununseptium", "(294)", 7, 8,
+				"A8.jpeg", "Ununoctium", "(294)", 8, 8,
+				"A8.jpeg", "Ununoctium", "(294)", 9, 8,
+				"A8.jpeg", "Ununoctium", "(294)", 10,8,
+				"A8.jpeg", "Ununoctium", "(294)", 11,8,
+				"A8.jpeg", "Ununoctium", "(294)", 12,8,
+				"A8.jpeg", "Ununoctium", "(294)", 13,8,
+				"A8.jpeg", "Ununoctium", "(294)", 14,8,
+				"A8.jpeg", "Ununoctium", "(294)", 15,8,
+				"A8.jpeg", "Ununoctium", "(294)", 16,8 
+			];
+			var camera, scene, renderer;
+			var controls;
+			var objects = [];
+			var targets = { table: [], sphere: [], helix: [], grid: [] };
+			init();
+			animate();
+			function init() {
+				camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+				camera.position.z = 3000;
+				scene = new THREE.Scene();
+				// table
+				for(var i = 0; i < table.length; i += 5) {
+					var element = document.createElement('div');
+					element.className = 'element';
+					element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
+
+//					var number = document.createElement('div');
+//					number.className = 'number';
+//					number.textContent = (i / 5) + 1;
+//					element.appendChild(number);
+
+					var symbol = document.createElement('div');
+					symbol.className = 'symbol';
+					symbol.innerHTML = "<img src='img/"+table[i]+"'/>";
+					element.appendChild(symbol);
+
+//					var details = document.createElement('div');
+//					details.className = 'details';
+//					details.innerHTML = table[i + 1] + '<br>' + table[i + 2];
+//					element.appendChild(details);
+
+					var object = new THREE.CSS3DObject(element);
+					object.position.x = Math.random() * 4000 - 2000;
+					object.position.y = Math.random() * 4000 - 2000;
+					object.position.z = Math.random() * 4000 - 2000;
+					scene.add(object);
+
+					objects.push(object);
+
+					var object = new THREE.Object3D();
+					object.position.x = (table[i + 3] * 140) - 1330;
+					object.position.y = -(table[i + 4] * 180) + 990;
+					targets.table.push(object);
+				}
+				// sphere
+				var vector = new THREE.Vector3();
+				for(var i = 0, l = objects.length; i < l; i++) {
+					var phi = Math.acos(-1 + (2 * i) / l);
+					var theta = Math.sqrt(l * Math.PI) * phi;
+					var object = new THREE.Object3D();
+					object.position.x = 800 * Math.cos(theta) * Math.sin(phi);
+					object.position.y = 800 * Math.sin(theta) * Math.sin(phi);
+					object.position.z = 800 * Math.cos(phi);
+					vector.copy(object.position).multiplyScalar(2);
+					object.lookAt(vector);
+					targets.sphere.push(object);
+				}
+				// helix
+				var vector = new THREE.Vector3();
+				for(var i = 0, l = objects.length; i < l; i++) {
+					var phi = i * 0.175 + Math.PI;
+					var object = new THREE.Object3D();
+					object.position.x = 900 * Math.sin(phi);
+					object.position.y = -(i * 8) + 450;
+					object.position.z = 900 * Math.cos(phi);
+					vector.x = object.position.x * 2;
+					vector.y = object.position.y;
+					vector.z = object.position.z * 2;
+					object.lookAt(vector);
+					targets.helix.push(object);
+				}
+				// grid
+				for(var i = 0; i < objects.length; i++) {
+					var object = new THREE.Object3D();
+					object.position.x = ((i % 5) * 400) - 800;
+					object.position.y = (-(Math.floor(i / 5) % 5) * 400) + 800;
+					object.position.z = (Math.floor(i / 25)) * 1000 - 2000;
+					targets.grid.push(object);
+				}
+				//
+				renderer = new THREE.CSS3DRenderer();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				renderer.domElement.style.position = 'absolute';
+				document.getElementById('container').appendChild(renderer.domElement);
+				//
+				controls = new THREE.TrackballControls(camera, renderer.domElement);
+				controls.rotateSpeed = 0.5;
+				controls.minDistance = 500;
+				controls.maxDistance = 6000;
+				controls.addEventListener('change', render);
+				var button = document.getElementById('table');
+				button.addEventListener('click', function(event) {
+					transform(targets.table, 2000);
+				}, false);
+				var button = document.getElementById('sphere');
+				button.addEventListener('click', function(event) {
+					transform(targets.sphere, 2000);
+				}, false);
+				var button = document.getElementById('helix');
+				button.addEventListener('click', function(event) {
+					transform(targets.helix, 2000);
+				}, false);
+				var button = document.getElementById('grid');
+				button.addEventListener('click', function(event) {
+					transform(targets.grid, 2000);
+				}, false);
+				transform(targets.table, 5000);
+				//
+				window.addEventListener('resize', onWindowResize, false);
+			}
+			function transform(targets, duration) {
+				TWEEN.removeAll();
+				for(var i = 0; i < objects.length; i++) {
+					var object = objects[i];
+					var target = targets[i];
+					new TWEEN.Tween(object.position)
+						.to({ x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration)
+						.easing(TWEEN.Easing.Exponential.InOut)
+						.start();
+
+					new TWEEN.Tween(object.rotation)
+						.to({ x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration)
+						.easing(TWEEN.Easing.Exponential.InOut)
+						.start();
+				}
+				new TWEEN.Tween(this)
+					.to({}, duration * 2)
+					.onUpdate(render)
+					.start();
+			}
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				render();
+			}
+			function animate() {
+				requestAnimationFrame(animate);
+				TWEEN.update();
+				controls.update();
+			}
+			function render() {
+				renderer.render(scene, camera);
+			}
+		</script>
+	</body>
+</html>
