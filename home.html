@@ -367,11 +367,12 @@
 					 url: "configdata.php",
 					 type: "get",
 					 success: function(data) {
-					 callback(data);
+					 // callback(data);
+					 console.log(data)
 			 	}
 			 })
 		}
-		console.log(getConfig)
+		// console.log(getConfig)
 			// wx.config({
 			// 	 appId: "<?php echo $signPackage['appId'];?>",
 			// 	 timestamp: "<?php echo $signPackage['timestamp'];?>",
