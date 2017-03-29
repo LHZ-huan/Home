@@ -360,8 +360,18 @@
 			}
 		</script>
 		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-		<script src="index.js"></script>
+		<!-- <script src="index.js"></script> -->
 		<script>
+		var getConfig = function(callback) {
+			 $.ajax({
+					 url: "configdata.php",
+					 type: "get",
+					 success: function(data) {
+					 callback(data);
+			 	}
+			 })
+		}
+		console.log(getConfig)
 			// wx.config({
 			// 	 appId: "<?php echo $signPackage['appId'];?>",
 			// 	 timestamp: "<?php echo $signPackage['timestamp'];?>",
