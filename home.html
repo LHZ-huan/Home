@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<div id="loading">
-			<div id="numload" class="laoding-num">0%</div>
+			<!-- <div id="numload" class="laoding-num">0%</div> -->
 			<div id="loading-center">
 				<div id="loading-center-absolute">
 					<div class="object"></div>
@@ -53,28 +53,28 @@
 			    var newimages=[]
 			    var imgdex = 0;
 			    var dexnum = 100/arr.length;
-			    var timeout =null;
+			    // var timeout =null;
 			    var arr=(typeof arr!="object")? [arr] : arr  //确保参数总是数组
 			    for (var i=0; i<arr.length; i++){
 			        // clearInterval(timeout);
 			        newimages[i]=new Image();
-			        newimages[i].src=arr[i]; 
+			        newimages[i].src=arr[i];     
 			        imgdex++;
 //			        document.getElementById("numload").innerHTML = parseInt(dexnum*imgdex)+"%"; 
-			        timeout = setInterval(function() {
-			        		var html = document.getElementById("numload").innerHTML.split("%")[0];
-			        		if((parseInt(html)+1)>dexnum*imgdex){
-			        			return false;
-			        		}
-			        		document.getElementById("numload").innerHTML = (parseInt(html)+1)+"%";
-			        },10)
+			        // timeout = setInterval(function() {
+		        	// 	var html = document.getElementById("numload").innerHTML.split("%")[0];
+		        	// 	if((parseInt(html)+1)>dexnum*imgdex){
+		        	// 		return false;
+		        	// 	}
+		        	// 	document.getElementById("numload").innerHTML = (parseInt(html)+1)+"%";
+			        // },1)
 			        
 			        if (imgdex>=arr.length) {
-			        		document.getElementById("loading").style.display="none";
-			        		document.getElementById("container").style.display="block";
-			        		document.getElementById("info").style.display="block";
-			        		document.getElementById("menu").style.display="block";
-			        		break;
+		        		document.getElementById("loading").style.display="none";
+		        		document.getElementById("container").style.display="block";
+		        		document.getElementById("info").style.display="block";
+		        		document.getElementById("menu").style.display="block";
+		        		break;
 			        }
 			    }
 			}
